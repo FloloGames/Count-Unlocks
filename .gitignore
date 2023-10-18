@@ -38,7 +38,15 @@ Icon?
 .tags*
 
 build/
-.android/
+
+#.android/
+.android/.gradle
+.android/.idea
+.android/build
+.android/Flutter
+.android/gradle
+.android/plugins_build_output
+
 .ios/
 .flutter-plugins
 .flutter-plugins-dependencies
@@ -48,3 +56,6 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
+.android/app/src/main/res/values/styles.xml
+.android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+.android/build.gradle

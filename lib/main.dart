@@ -21,7 +21,9 @@ class _MyAppState extends State<MyApp> {
 
   static const String testMethodName = "testMethod";
   static const String testCBMethodName = "testCBMethod";
+
   String debugText = "";
+
   void callTestMethod() {
     testMethodChannel.invokeMethod(testMethodName);
   }
