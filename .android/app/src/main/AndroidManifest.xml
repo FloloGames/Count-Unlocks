@@ -7,17 +7,15 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ENABLE_LOCKSCREEN_KEYGUARD"/>
-    
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
     <application
         android:label="count_unlocks"
         android:icon="@mipmap/ic_launcher">
-        <receiver android:name="com.example.count_unlocks.host.DeviceUnlockManager"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.USER_PRESENT"></action>
-            </intent-filter>
-        </receiver>
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -37,7 +35,16 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.RUN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
+        <service android:name=".AndroidForegroundService" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

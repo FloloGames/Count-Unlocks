@@ -43,7 +43,6 @@ class _MyAppState extends State<MyApp> {
 
     testCBMethodChannel.setMethodCallHandler((call) {
       if (call.method == testCBMethodName) {
-        print("testCBMethodCalled");
         debugText = call.arguments.toString();
         setState(() {});
       }
