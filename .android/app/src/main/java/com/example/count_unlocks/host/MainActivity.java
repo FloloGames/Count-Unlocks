@@ -23,7 +23,7 @@ public class MainActivity extends FlutterActivity {
     private final String testCBChannelName = "testCBChannel";
     private final String testMethodName = "testMethod";
     private static final String testCBMethodName = "testCBMethod";
-
+    private static final String getUnlockCountMethodName= "getUnlockCount";
     private static MethodChannel testCBMethodChannel;
 
 
@@ -40,7 +40,9 @@ public class MainActivity extends FlutterActivity {
             if(call.method.contentEquals(testMethodName)){
                 Toast.makeText(this, "TestMethod works!", Toast.LENGTH_LONG).show();
                 CallCBMethod("TestMethod works!!!");
-                //Log.i("TestMethodChannel", "TestPrint");
+            } else if(call.method.contentEquals(getUnlockCountMethodName)){
+                Toast.makeText(this, "TestMethod works!", Toast.LENGTH_LONG).show();
+                result.success(AndroidForegroundService.getInstance().getUnlockCount());
             }
         });
 
@@ -58,7 +60,6 @@ public class MainActivity extends FlutterActivity {
     public static void CallCBMethod(String msg){
         testCBMethodChannel.invokeMethod(testCBMethodName, msg);
     }
-
     private  boolean isForegroundServiceRunning(){
         ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for(ActivityManager.RunningServiceInfo service: activityManager.getRunningServices(Integer.MAX_VALUE)){

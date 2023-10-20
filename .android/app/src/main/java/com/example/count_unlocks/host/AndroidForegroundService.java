@@ -10,18 +10,30 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
-import io.flutter.embedding.android.FlutterActivity;
-
 public class AndroidForegroundService extends Service {
+    int unlockCountToOpenApp = 5;
+    int unlocksCount = 0;
+    int totalUnlocksCount = 0;
     DeviceUnlockManager deviceUnlockManager;
     private static AndroidForegroundService instance;
     public static AndroidForegroundService getInstance(){
         return instance;
     }
-    public void openFlutterApp(){
+    public void deviceUnlocked(){
+        totalUnlocksCount++;
+        unlocksCount++;
+        if(unlocksCount < unlockCountToOpenApp){
+            return;
+        }
         Intent dialogIntent = new Intent(this, MainActivity.class);
         dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        dialogIntent.putExtra("totalUnlockCount", totalUnlocksCount); // Replace "key" and "value" with your actual data
+
         startActivity(dialogIntent);
+        unlocksCount = 0;
+    }
+    public int getUnlockCount(){
+        return unlocksCount;
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -52,7 +64,7 @@ public class AndroidForegroundService extends Service {
                     .setSmallIcon(R.drawable.launch_background);
 
             startForeground(1001, notification.build());
-            MainActivity.CallCBMethod("");
+            MainActivity.CallCBMethod("ForegroundService running!");
         } else {
             MainActivity.CallCBMethod("SDK is to old to run foreground service!");
         }

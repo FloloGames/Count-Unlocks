@@ -21,6 +21,7 @@ class _MyAppState extends State<MyApp> {
 
   static const String testMethodName = "testMethod";
   static const String testCBMethodName = "testCBMethod";
+  static const String getUnlockCountMethodName = "getUnlockCount";
 
   String debugText = "";
 
@@ -28,12 +29,20 @@ class _MyAppState extends State<MyApp> {
     testMethodChannel.invokeMethod(testMethodName);
   }
 
+  void getUnlockCount() async {
+    int unlockCount =
+        await testMethodChannel.invokeMethod(getUnlockCountMethodName);
+    debugText = "Unlock Count: $unlockCount";
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
 
     // // Retrieve parameters from the Intent
-    // Map<String, dynamic> args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    // Map<String, dynamic> args =
+    //     ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
     // if (args != null) {
     //   // Process the parameters
@@ -75,11 +84,12 @@ class _MyAppState extends State<MyApp> {
                 ElevatedButton(
                   child: const Text("Test.."),
                   onPressed: () {
-                    print("Testing started...");
-                    // print("does nothing jet");
                     callTestMethod();
-                    print("Testing ended.");
                   },
+                ),
+                ElevatedButton(
+                  onPressed: getUnlockCount,
+                  child: const Text("GetUnlockCount"),
                 ),
               ],
             ),
