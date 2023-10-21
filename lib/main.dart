@@ -57,6 +57,7 @@ class _MyAppState extends State<MyApp> {
       }
       return Future.value();
     });
+    getUnlockCount();
   }
 
   @override

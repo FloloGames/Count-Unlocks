@@ -1,0 +1,3 @@
+* einfügen das nach neustart der ForegroundService gestartet wird. (https://youtu.be/bA7v1Ubjlzw?t=668)
+* Wenn app gestartetwird über method channel fragen ob es von ForegroundService gestartet wurde
+* Funktion hinzufügen welche den ForegroundService startet bzw beendet damit es einfacher für den Benutzer ist
