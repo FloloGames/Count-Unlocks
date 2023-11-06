@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:count_unlocks/android_count_unlocks_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:path_provider/path_provider.dart';
@@ -15,23 +16,17 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static const testMethodChannel = MethodChannel("testChannel");
-  static const testCBMethodChannel = MethodChannel("testCBChannel");
-  // int _deviceUnlocks = 0;
-
-  static const String testMethodName = "testMethod";
-  static const String testCBMethodName = "testCBMethod";
-  static const String getUnlockCountMethodName = "getUnlockCount";
-
+  AndroidCountUnlocksManager androidCountUnlocksManager =
+      AndroidCountUnlocksManager();
   String debugText = "";
 
   void callTestMethod() {
-    testMethodChannel.invokeMethod(testMethodName);
+    androidCountUnlocksManager.callTestMethod();
   }
 
   void getUnlockCount() async {
-    int unlockCount =
-        await testMethodChannel.invokeMethod(getUnlockCountMethodName);
+    int? unlockCount = await androidCountUnlocksManager.getUnlockCount();
+    unlockCount ??= -1;
     debugText = "Unlock Count: $unlockCount";
     setState(() {});
   }
@@ -50,13 +45,6 @@ class _MyAppState extends State<MyApp> {
     //   param2 = args["param2"] ?? 0;
     // }
 
-    testCBMethodChannel.setMethodCallHandler((call) {
-      if (call.method == testCBMethodName) {
-        debugText = call.arguments.toString();
-        setState(() {});
-      }
-      return Future.value();
-    });
     getUnlockCount();
   }
 

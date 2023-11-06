@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.count_unlocks.host"
-        minSdkVersion 26//19 //so we can start the ForegroundService
+        minSdkVersion 19
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
