@@ -15,7 +15,6 @@ public class DeviceUnlockManager extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if(intent.getAction().equals(Intent.ACTION_USER_PRESENT)){
             Log.i("DeviceUnlockManager", "Phone got unlocked!");
-            MainActivity.CallCBMethod("Phone got unlocked!");
 
             AndroidForegroundService foregroundService = AndroidForegroundService.getInstance();
             if(foregroundService == null){

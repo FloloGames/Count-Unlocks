@@ -32,6 +32,12 @@ public class AndroidForegroundService extends Service {
         startActivity(dialogIntent);
         unlocksCount = 0;
     }
+    public int getUnlockCountToOpenApp(){
+        return unlockCountToOpenApp;
+    }
+    public void setUnlockCountToOpenApp(int value){
+        unlockCountToOpenApp = value;
+    }
     public int getUnlockCount(){
         return unlocksCount;
     }
@@ -46,29 +52,22 @@ public class AndroidForegroundService extends Service {
 
 
 
-        MainActivity.CallCBMethod("Registered Unlock Receiver");
 
         final String CHANNEL_ID = "ForegroundService ID";
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    CHANNEL_ID,
-                    NotificationManager.IMPORTANCE_LOW
-            );
+        NotificationChannel channel = new NotificationChannel(
+                CHANNEL_ID,
+                CHANNEL_ID,
+                NotificationManager.IMPORTANCE_LOW
+        );
 
-            getSystemService(NotificationManager.class).createNotificationChannel(channel);
-            Notification.Builder notification = new Notification.Builder(this, CHANNEL_ID)
-                    .setContentText("Service is running")
-                    .setContentTitle("Service enabled")
-                    .setSmallIcon(R.drawable.launch_background);
+        getSystemService(NotificationManager.class).createNotificationChannel(channel);
+        Notification.Builder notification = new Notification.Builder(this, CHANNEL_ID)
+                .setContentText("Service is running")
+                .setContentTitle("Service enabled")
+                .setSmallIcon(R.drawable.launch_background);
 
-            startForeground(1001, notification.build());
-            MainActivity.CallCBMethod("ForegroundService running!");
-        } else {
-            MainActivity.CallCBMethod("SDK is to old to run foreground service!");
-        }
-
+        startForeground(1001, notification.build());
 
 
         return super.onStartCommand(intent, flags, startId);

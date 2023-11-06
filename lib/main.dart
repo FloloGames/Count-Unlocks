@@ -19,6 +19,8 @@ class _MyAppState extends State<MyApp> {
   AndroidCountUnlocksManager androidCountUnlocksManager =
       AndroidCountUnlocksManager();
   String debugText = "";
+  bool _foregroundServiceRunning = false;
+  int _unlockCount = -1;
 
   void callTestMethod() {
     androidCountUnlocksManager.callTestMethod();
@@ -79,6 +81,76 @@ class _MyAppState extends State<MyApp> {
                 ElevatedButton(
                   onPressed: getUnlockCount,
                   child: const Text("GetUnlockCount"),
+                ),
+                Text(
+                  "ForegroundServiceRunning: $_foregroundServiceRunning",
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                ElevatedButton(
+                  child: const Text("Start foregroundService"),
+                  onPressed: () async {
+                    bool? b = await androidCountUnlocksManager
+                        .startForegroundService();
+                    b ??= false;
+                    _foregroundServiceRunning = b;
+                    setState(() {});
+                  },
+                ),
+                ElevatedButton(
+                  child: const Text("End foregroundService"),
+                  onPressed: () async {
+                    bool? b =
+                        await androidCountUnlocksManager.endForegroundService();
+                    b ??= true;
+                    _foregroundServiceRunning = !b;
+                    setState(() {});
+                  },
+                ),
+                ElevatedButton(
+                  child: const Text("isForegroundServiceRunning"),
+                  onPressed: () async {
+                    bool? b = await androidCountUnlocksManager
+                        .isForegroundServiceRunning();
+                    b ??= true;
+                    _foregroundServiceRunning = b;
+                    setState(() {});
+                  },
+                ),
+                Text(
+                  "ForegroundServiceRunning: $_unlockCount",
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                ElevatedButton(
+                  child: const Text("setForegroundUnlockCount to 5"),
+                  onPressed: () async {
+                    bool? b = await androidCountUnlocksManager
+                        .setUnlockCountToOpenApp(5);
+                    b ??= false;
+                    if (b) {
+                      _unlockCount = 5;
+                    }
+                    setState(() {});
+                  },
+                ),
+                ElevatedButton(
+                  child: const Text("setForegroundUnlockCount to 10"),
+                  onPressed: () async {
+                    bool? b = await androidCountUnlocksManager
+                        .setUnlockCountToOpenApp(10);
+                    b ??= false;
+                    if (b) {
+                      _unlockCount = 10;
+                    }
+                    setState(() {});
+                  },
+                ),
+                ElevatedButton(
+                  child: const Text("getForegroundUnlockCount"),
+                  onPressed: () async {
+                    int? b = await androidCountUnlocksManager.getUnlockCount();
+                    _unlockCount = b ?? -1;
+                    setState(() {});
+                  },
                 ),
               ],
             ),
