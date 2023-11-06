@@ -100,7 +100,6 @@ public class MainActivity extends FlutterActivity implements MethodChannel.Metho
             }
         } else if(call.method.contentEquals(getUnlockCountToOpenApp)){
             AndroidForegroundService foregroundService = AndroidForegroundService.getInstance();
-            Log.i("getUnlockCountToOpenApp", "String.valueOf(-1)");
             if(foregroundService == null) {
                 Log.i("getUnlockCountToOpenApp", String.valueOf(-1));
                 result.success(-1);
