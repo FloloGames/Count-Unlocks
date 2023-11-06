@@ -1,31 +1,28 @@
 package com.example.count_unlocks.host;
 
+
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import io.flutter.Log;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugins.GeneratedPluginRegistrant;
 
-public class MainActivity extends FlutterActivity {
+public class MainActivity extends FlutterActivity implements MethodChannel.MethodCallHandler {
     private final String testChannelName = "testChannel";
     private final String testCBChannelName = "testCBChannel";
     private final String testMethodName = "testMethod";
     private static final String testCBMethodName = "testCBMethod";
     private static final String getUnlockCountMethodName= "getUnlockCount";
     private static MethodChannel testCBMethodChannel;
-
+    private static MethodChannel testMethodChannel;
 
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
@@ -33,30 +30,19 @@ public class MainActivity extends FlutterActivity {
 
         //GeneratedPluginRegistrant.registerWith(flutterEngine);
 
-        MethodChannel testMethodChannel = new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), testChannelName);
+        testMethodChannel = new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), testChannelName);
         testCBMethodChannel = new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), testCBChannelName);
 
-        testMethodChannel.setMethodCallHandler((call, result) -> {
-            if(call.method.contentEquals(testMethodName)){
-                Toast.makeText(this, "TestMethod works!", Toast.LENGTH_LONG).show();
-                CallCBMethod("TestMethod works!!!");
-            } else if(call.method.contentEquals(getUnlockCountMethodName)){
-                Toast.makeText(this, "TestMethod works!", Toast.LENGTH_LONG).show();
-                result.success(AndroidForegroundService.getInstance().getUnlockCount());
-            }
-        });
+        testMethodChannel.setMethodCallHandler(this);
 
         if(!isForegroundServiceRunning()) {
             Intent foregroundServiceIntent = new Intent(this, AndroidForegroundService.class);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(foregroundServiceIntent);
-                CallCBMethod("foreground service started!");
-            } else {
-                CallCBMethod("SDK is to old to run foreground service!");
-            }
+            startForegroundService(foregroundServiceIntent);
+            CallCBMethod("foreground service started!");
         }
     }
+
     public static void CallCBMethod(String msg){
         testCBMethodChannel.invokeMethod(testCBMethodName, msg);
     }
@@ -68,5 +54,19 @@ public class MainActivity extends FlutterActivity {
             }
         }
         return false;
+    }
+
+    @Override
+    public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
+        if(call.method.contentEquals(testMethodName)){
+            Toast.makeText(this, "TestMethod works!", Toast.LENGTH_LONG).show();
+            CallCBMethod("TestMethod works!!!");
+        } else if(call.method.contentEquals(getUnlockCountMethodName)){
+            Toast.makeText(this, "TestMethod works!", Toast.LENGTH_LONG).show();
+            int unlockCount = AndroidForegroundService.getInstance().getUnlockCount();
+            result.success(unlockCount);
+        } else {
+            result.notImplemented();
+        }
     }
 }
